@@ -21,6 +21,10 @@ BLUE = (0, 0, 255)    # Couleur des cartes du joueur
 RED = (255, 0, 0)     # Couleur des cartes de l'IA
 GREEN = (0, 255, 0)   # Pour encadrer la sélection
 
+# ===================== Paramètres d'IA =====================
+
+MINIMAX_DEPTH = 6  #la profondeur
+
 # ===================== Création de la fenêtre =====================
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Skystones - IA et Joueur")
@@ -233,21 +237,121 @@ def announce_winner():
 def ai_play():
     global current_turn
     if ai_deck:
-        for r in range(GRID_SIZE):
-            for c in range(GRID_SIZE):
-                if board[r][c] is None:
-                    card = ai_deck.pop(0)
-                    place_card(r, c, card, "O")
+        # Lancer Minimax sur une copie du plateau et des decks
+        board_copy = copy.deepcopy(board)
+        ai_deck_copy = ai_deck.copy()
+        player_deck_copy = player_deck.copy()
+        _, best_move = minimax(board_copy, player_deck_copy, ai_deck_copy, MINIMAX_DEPTH, True, -float('inf'), float('inf'))
+        if best_move is not None:
+            card_index, row, col = best_move
+            card = ai_deck.pop(card_index)  # Retire la carte choisie du deck réel
+            place_card(row, col, card, "O")
+            pygame.display.flip()
+            pygame.time.delay(500)
+            if is_board_full():
+                announce_winner()
+                return
+            current_turn = "PLAYER"
 
-                    pygame.display.flip()
-                    pygame.time.delay(500)
+def evaluate_state(sim_board):
+    """Retourne le score de l'état (nombre de cartes IA - nombre de cartes joueur)."""
+    ai_count = sum(1 for row in sim_board for cell in row if cell and cell["owner"] == "O")
+    player_count = sum(1 for row in sim_board for cell in row if cell and cell["owner"] == "X")
+    return ai_count - player_count
 
-                    if is_board_full():
-                        announce_winner()
-                        return
+def get_possible_moves(sim_board, deck):
+    """
+    Génère la liste des coups possibles sous forme de tuples (card_index, row, col)
+    pour le joueur dont le deck est passé en paramètre.
+    """
+    moves = []
+    for idx, card in enumerate(deck):
+        for row in range(GRID_SIZE):
+            for col in range(GRID_SIZE):
+                if sim_board[row][col] is None:
+                    moves.append((idx, row, col))
+    return moves
 
-                    current_turn = "PLAYER"
-                    return
+def simulate_check_and_capture(sim_board, row, col, nr, nc, placed_side, neighbor_side):
+    """
+    Version simulation de check_and_capture sans animation.
+    """
+    c1 = sim_board[row][col]
+    c2 = sim_board[nr][nc]
+    if c1 is None or c2 is None:
+        return
+    if c1["owner"] == c2["owner"]:
+        return
+    if c1[placed_side] > c2[neighbor_side]:
+        c2["owner"] = c1["owner"]
+    elif c2[neighbor_side] > c1[placed_side]:
+        c1["owner"] = c2["owner"]
+
+def simulate_capture_adjacent(sim_board, row, col):
+    """
+    Applique les règles de capture sur le board simulé pour la carte placée en (row, col).
+    """
+    neighbors = [
+        (row - 1, col, "top", "bottom"),
+        (row, col + 1, "right", "left"),
+        (row + 1, col, "bottom", "top"),
+        (row, col - 1, "left", "right")
+    ]
+    for (nr, nc, placed_side, neighbor_side) in neighbors:
+        if 0 <= nr < GRID_SIZE and 0 <= nc < GRID_SIZE and sim_board[nr][nc] is not None:
+            simulate_check_and_capture(sim_board, row, col, nr, nc, placed_side, neighbor_side)
+
+def simulate_place_card(sim_board, row, col, card, owner):
+    """
+    Retourne un nouvel état de plateau après avoir placé une copie de 'card'
+    sur la case (row, col) pour le propriétaire 'owner', en appliquant les captures.
+    """
+    new_board = copy.deepcopy(sim_board)
+    new_card = copy.deepcopy(card)
+    new_card["owner"] = owner
+    new_board[row][col] = new_card
+    simulate_capture_adjacent(new_board, row, col)
+    return new_board
+
+def minimax(sim_board, player_deck_sim, ai_deck_sim, depth, maximizingPlayer, alpha, beta):
+    # Condition terminale : profondeur nulle ou plateau complet
+    if depth == 0 or all(cell is not None for row in sim_board for cell in row):
+        return evaluate_state(sim_board), None
+
+    if maximizingPlayer:
+        maxEval = -float('inf')
+        best_move = None
+        moves = get_possible_moves(sim_board, ai_deck_sim)
+        for move in moves:
+            card_index, row, col = move
+            new_ai_deck = ai_deck_sim.copy()
+            card = new_ai_deck.pop(card_index)
+            new_board = simulate_place_card(sim_board, row, col, card, "O")
+            eval_score, _ = minimax(new_board, player_deck_sim, new_ai_deck, depth - 1, False, alpha, beta)
+            if eval_score > maxEval:
+                maxEval = eval_score
+                best_move = move
+            alpha = max(alpha, eval_score)
+            if beta <= alpha:
+                break
+        return maxEval, best_move
+    else:
+        minEval = float('inf')
+        best_move = None
+        moves = get_possible_moves(sim_board, player_deck_sim)
+        for move in moves:
+            card_index, row, col = move
+            new_player_deck = player_deck_sim.copy()
+            card = new_player_deck.pop(card_index)
+            new_board = simulate_place_card(sim_board, row, col, card, "X")
+            eval_score, _ = minimax(new_board, new_player_deck, ai_deck_sim, depth - 1, True, alpha, beta)
+            if eval_score < minEval:
+                minEval = eval_score
+                best_move = move
+            beta = min(beta, eval_score)
+            if beta <= alpha:
+                break
+        return minEval, best_move
 
 # ===================== Réinitialisation de la partie =====================
 def reset_game():
