@@ -1,96 +1,100 @@
-# Skystones - IA et Joueur
+# 🎴 Skystones – Jeu interactif avec IA 🧠
 
-## Description
-**Skystones** est une implémentation du jeu de cartes inspiré de Triple Triad où deux joueurs (un humain et une IA) s'affrontent en posant des cartes sur un plateau de 3x3 cases. Chaque carte possède des "lames" sur ses côtés, représentant sa force. Une carte posée peut capturer des cartes adjacentes si elle a une valeur de lame supérieure à celle de la carte voisine.
-
-Le joueur et l'IA placent leurs cartes à tour de rôle, et l'objectif est de capturer le plus grand nombre de cartes possible à la fin de la partie.
+Bienvenue sur **Skystones**, une version revisitée et captivante inspirée du célèbre jeu de cartes Triple Triad. Affrontez une intelligence artificielle redoutable. Le défi ultime ? Capturer un maximum de cartes grâce à vos stratégies les plus astucieuses !
 
 ---
 
-## Fonctionnalités
+## 🌟 Fonctionnalités principales
 
-- **Affichage graphique en Pygame** avec un plateau, des cartes et un système de sélection visuelle.
-- **Système de capture bidirectionnelle** :
-  - Une carte posée peut capturer ses cartes voisines si elle a plus de lames sur les côtés adjacents.
-  - Une carte déjà en place peut capturer une carte nouvellement posée si elle a plus de lames.
-  - Deux cartes du même propriétaire ne peuvent pas se capturer entre elles.
-- **Système de jeu fluide et interactif** avec une IA qui joue automatiquement à son tour.
-- **Effets d'animation** lors des captures de cartes.
-- **Annonce du vainqueur à la fin du jeu** en fonction du nombre de cartes contrôlées.
+- 🎲 **Jeu interactif en temps réel** avec un plateau dynamique de **3x3** cases.
+- 🤖 **Intelligence artificielle avancée** basée sur l'algorithme **Minimax avec élagage Alpha-Beta** pour une expérience stimulante.
+- ⚔️ **Mécanisme de capture bidirectionnelle** des cartes, offrant des stratégies profondes et intéressantes.
+- 🎨 **Interface intuitive et fluide** réalisée avec **Pygame**.
+- 💫 **Animations visuelles** lors des captures de cartes pour une expérience immersive.
+- 🏆 **Annonce claire du vainqueur** à la fin de chaque partie.
 
 ---
 
-## Technologies utilisées
+## 🚀 Installation rapide
 
-- **Python 3**
-- **Pygame** (pour l'affichage et l'interaction utilisateur)
+### 📋 Prérequis
 
----
+Assurez-vous que **Python 3** est installé sur votre ordinateur :
 
-## Installation
-### Prérequis
-Assurez-vous d'avoir Python 3 installé sur votre machine. Vous pouvez vérifier votre version de Python avec :
-
-```sh
+```bash
 python --version
 ```
 
-### Installation de Pygame
-Si vous n'avez pas encore installé Pygame, utilisez la commande suivante :
+### 🔧 Installation des dépendances
 
-```sh
+Pour installer **Pygame** facilement, lancez cette commande :
+
+```bash
 pip install pygame
 ```
 
-### Lancer le jeu
-Clonez ou téléchargez le projet, puis exécutez le fichier principal :
+### ▶️ Lancer le jeu
 
-```sh
+Clonez le dépôt ou téléchargez le projet et lancez-le avec :
+
+```bash
 python skystones.py
 ```
 
 ---
 
-## Règles du jeu
-1. Chaque joueur possède un deck de cartes :
-   - **Le joueur** commence avec **4 cartes**.
-   - **L'IA** commence avec **5 cartes**.
-2. Les joueurs posent leurs cartes à tour de rôle sur une case libre du plateau **3x3**.
-3. Lorsqu'une carte est posée, elle **peut capturer les cartes adjacentes** si elle a un nombre de lames supérieur sur le côté correspondant.
-4. Une carte **déjà en place** peut aussi capturer une carte nouvellement posée si elle a plus de lames.
-5. **Les cartes du même joueur ne peuvent pas se capturer entre elles**.
-6. La partie prend fin lorsque toutes les cases du plateau sont remplies.
-7. Le joueur ayant **le plus de cartes sous son contrôle** à la fin remporte la partie.
+## 📖 Règles du jeu
+
+- Chaque joueur dispose d'un deck :
+  - 👤 **Joueur humain : 4 cartes**.
+  - 🤖 **IA : 5 cartes**.
+
+- Les joueurs jouent à tour de rôle en plaçant une carte sur une case vide.
+- 🃏 Une carte peut **capturer une carte voisine** si elle possède **plus de lames** sur le côté adjacent.
+- ⚠️ Une carte déjà posée peut également capturer une carte nouvellement placée.
+- 🙅‍♂️ Deux cartes appartenant au même joueur ne peuvent pas se capturer entre elles.
+- 🏁 La partie se termine lorsque le plateau est complet.
+- 🎖️ Le vainqueur est celui qui possède le plus de cartes à la fin.
 
 ---
 
-## Commandes et interaction
-- **Sélectionner une carte** : Cliquez sur une carte dans votre deck.
-- **Placer une carte** : Cliquez sur une case vide du plateau.
-- **Le tour passe automatiquement** après chaque action.
-- **L'IA joue automatiquement** lorsqu'elle a la main.
-- **Le score final est affiché à la fin de la partie**.
+## 🎮 Comment jouer ?
+
+- **Choisir une carte** : Cliquez simplement sur une carte disponible dans votre deck.
+- **Poser une carte** : Cliquez sur une case vide du plateau pour la placer.
+- **L'IA joue automatiquement son tour** dès que vous avez joué.
+- **Consultez le résultat final** avec l'affichage clair du vainqueur !
 
 ---
 
-## Évolutions futures
-Voici quelques améliorations prévues :
-- Amélioration des **animations** pour les captures.
-- Personnalisation des **cartes avec des illustrations et des effets spéciaux**.
+## 💡 Évolutions à venir
+
+Nous prévoyons de belles améliorations pour enrichir votre expérience de jeu :
+
+- 🎆 **Animations et effets spéciaux** améliorés lors des captures.
+- 🎨 **Illustrations personnalisées** pour rendre chaque carte unique.
+- 🎵 Ajout d'une **ambiance sonore immersive**.
 
 ---
 
-## Contributions
-Les contributions sont les bienvenues ! Si vous souhaitez améliorer le jeu ou corriger un bug, vous pouvez :
-1. Cloner le dépôt.
-2. Créer une branche.
-3. Faire vos modifications.
-4. Soumettre une pull request.
+## 🤝 Contribuer au projet
+
+Les contributions sont chaleureusement accueillies ! Pour participer :
+
+1. 🍴 Forkez ce dépôt.
+2. 🌿 Créez votre branche (`git checkout -b ma-super-fonctionnalite`).
+3. 🛠️ Faites vos modifications et committez (`git commit -m 'Ajout d'une fonctionnalité géniale'`).
+4. 🚩 Soumettez une Pull Request et partagez votre amélioration !
 
 ---
 
-## Auteurs
-- **Nicolas, Badre, Thomas** - Développement et conception du jeu
+## 👨‍💻 Équipe du projet
 
-Merci d'avoir testé **Skystones** ! 🚀 Amusez-vous bien !
+- **Nicolas** 🚀
+- **Badre** 🎯
+- **Thomas** 🛠️
+
+---
+
+🎉 **Merci de jouer à Skystones ! Bonne partie et amusez-vous bien !** 🎉
 
